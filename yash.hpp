@@ -51,6 +51,7 @@ public:
 class connection {
 public:
 	connection() : cb_() { }
+	~connection() { cb_.reset(); }
 
 	// the connections share the actual callback closure
 	// if disconnect is called on one of them, all are
@@ -79,8 +80,6 @@ public:
 		}
 	}
 
-	~connection() { cb_.reset(); }
-
 private:
 	typedef std::tr1::weak_ptr<detail::callback_base> callback_weak_ptr;
 	typedef std::tr1::shared_ptr<detail::callback_base> callback_ptr;
@@ -95,24 +94,17 @@ private:
 class auto_connection {
 public:
 	auto_connection(connection const& conn)
-	:
-		conn_(conn)
-	{ }
+	: conn_(conn) { }
 
 	void disconnect()
-	{
-		conn_.disconnect();
-	}
+	{ conn_.disconnect(); }
 
 	bool connected() const
-	{
-		return conn_.connected();
-	}
+	{ return conn_.connected(); }
 
 	~auto_connection()
-	{
-		conn_.disconnect();
-	}
+	{ conn_.disconnect(); }
+
 private:
 	auto_connection(); // = deleted
 	auto_connection(auto_connection const&); // = deleted
@@ -138,16 +130,14 @@ public:
 	typedef signal_proxy<T> proxy_type;
 	typedef typename signal_proxy<T>::slot_type slot_type;
 
-	signal() {}
+	signal() : cb_() { }
 	~signal() {}
 
 	size_t slots() const
 	{ return cb_.size(); }
 
 	connection connect(slot_type const& slot)
-	{
-		return connection(add_callback(slot));
-	}
+	{ return connection(add_callback(slot)); }
 
 	#define SIGNAL_CALL(...)                                        \
 	{                                                               \
