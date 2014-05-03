@@ -136,6 +136,8 @@ public:
 	size_t slots() const
 	{ return cb_.size(); }
 
+	// the callback will not be called for any already active
+	// invokation of this signal at the time connect() is called.
 	connection connect(slot_type const& slot)
 	{ return connection(add_callback(slot)); }
 
