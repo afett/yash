@@ -91,6 +91,36 @@ private:
 	callback_weak_ptr cb_;
 };
 
+// RAII wrapper for connection
+class auto_connection {
+public:
+	auto_connection(connection const& conn)
+	:
+		conn_(conn)
+	{ }
+
+	void disconnect()
+	{
+		conn_.disconnect();
+	}
+
+	bool connected() const
+	{
+		return conn_.connected();
+	}
+
+	~auto_connection()
+	{
+		conn_.disconnect();
+	}
+private:
+	auto_connection(); // = deleted
+	auto_connection(auto_connection const&); // = deleted
+	auto_connection & operator=(auto_connection const&); // = deleted
+
+	connection conn_;
+};
+
 // interface to expose a signal for a user without
 // allowing to invoke it.
 template <typename T>

@@ -661,6 +661,58 @@ void test_connect_in_callback()
 	TEST_ASSERT(sig.slots() == 4);
 }
 
+void test_auto_connection()
+{
+	call_result<> res1;
+	call_result<> res2;
+	call_result<> res3;
+	yash::signal<void(void)> sig;
+
+	yash::auto_connection conn1(sig.connect(std::tr1::bind(
+		&f0, tr1::ref(res1))));
+	TEST_ASSERT(conn1.connected());
+	{
+		yash::auto_connection conn2(sig.connect(std::tr1::bind(
+			&f0, tr1::ref(res2))));
+		TEST_ASSERT(conn2.connected());
+		TEST_ASSERT(sig.slots() == 2);
+
+		yash::auto_connection conn3(sig.connect(std::tr1::bind(
+			&f0, tr1::ref(res3))));
+		TEST_ASSERT(conn3.connected());
+		TEST_ASSERT(sig.slots() == 3);
+
+		sig();
+
+		TEST_ASSERT(res1.called);
+		TEST_ASSERT(res2.called);
+		TEST_ASSERT(res3.called);
+		res1.called = false;
+		res2.called = false;
+		res3.called = false;
+
+		conn3.disconnect();
+		TEST_ASSERT(!conn3.connected());
+		TEST_ASSERT(sig.slots() == 2);
+
+		sig();
+
+		TEST_ASSERT(res1.called);
+		TEST_ASSERT(res2.called);
+		TEST_ASSERT(!res3.called);
+		res1.called = false;
+		res2.called = false;
+	}
+
+	TEST_ASSERT(sig.slots() == 1);
+	TEST_ASSERT(conn1.connected());
+
+	sig();
+	TEST_ASSERT(res1.called);
+	TEST_ASSERT(!res2.called);
+	TEST_ASSERT(!res3.called);
+}
+
 int main()
 {
 	RUN_TEST(test_arg0);
@@ -684,5 +736,6 @@ int main()
 	RUN_TEST(test_connection_disconnect_all);
 	RUN_TEST(test_const_signal);
 	RUN_TEST(test_connect_in_callback);
+	RUN_TEST(test_auto_connection);
 	return 0;
 }
