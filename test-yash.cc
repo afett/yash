@@ -27,6 +27,10 @@ template <typename A0 = nil,
 	  typename A6 = nil,
 	  typename A7 = nil>
 struct call_result {
+	call_result()
+	: called(false), a0(), a1(), a2(), a3(), a4(), a5(), a6(), a7()
+	{ }
+
 	bool called;
 	A0 a0;
 	A1 a1;
