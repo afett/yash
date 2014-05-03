@@ -246,11 +246,6 @@ private:
 	signal(signal const&); // = deleted
 	signal & operator=(signal const&); // = deleted
 
-	struct callback;
-
-	typedef std::tr1::shared_ptr<callback> callback_ptr;
-	typedef std::tr1::weak_ptr<callback> callback_weak_ptr;
-
 	struct callback : public detail::callback_base {
 		callback(signal<T> *owner_, slot_type const& fn_)
 		: owner(owner_), fn(fn_)
@@ -271,6 +266,9 @@ private:
 		signal<T> *owner;
 		slot_type fn;
 	};
+
+	typedef std::tr1::shared_ptr<callback> callback_ptr;
+	typedef std::tr1::weak_ptr<callback> callback_weak_ptr;
 
 	callback_ptr add_callback(slot_type const& slot)
 	{
