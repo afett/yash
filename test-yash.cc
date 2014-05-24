@@ -717,6 +717,38 @@ void test_auto_connection()
 	TEST_ASSERT(!res3.called);
 }
 
+struct functor0 {
+	functor0()
+	:
+		called_(false)
+	{ }
+
+	void operator()()
+	{
+		called_ = true;
+	}
+
+	bool called_;
+};
+
+void test_functor_0arg()
+{
+	yash::signal<void(void)> sig;
+
+	functor0 f0;
+
+	// this will create a copy of f0!
+	sig.connect(f0);
+	sig();
+	TEST_ASSERT(!f0.called_);
+
+	// this will not
+	sig.connect(std::tr1::ref(f0));
+	sig();
+
+	TEST_ASSERT(f0.called_);
+}
+
 int main()
 {
 	RUN_TEST(test_arg0);
@@ -741,5 +773,6 @@ int main()
 	RUN_TEST(test_const_signal);
 	RUN_TEST(test_connect_in_callback);
 	RUN_TEST(test_auto_connection);
+	RUN_TEST(test_functor_0arg);
 	return 0;
 }
