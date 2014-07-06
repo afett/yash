@@ -141,7 +141,7 @@ public:
 	connection connect(slot_type const& slot)
 	{ return connection(add_callback(slot)); }
 
-	#define YASH_SIGNAL_CALL(...)                                        \
+	#define YASH_SIGNAL_CALL(...)                                   \
 	{                                                               \
 		typedef std::vector<callback_weak_ptr> container;       \
 		typedef typename container::const_iterator iterator;    \
