@@ -143,6 +143,9 @@ public:
 
 	#define YASH_SIGNAL_CALL(...)                                   \
 	{                                                               \
+		if (cb_.empty()) {                                      \
+			return;                                         \
+		}                                                       \
 		typedef std::vector<callback_weak_ptr> container;       \
 		typedef typename container::const_iterator iterator;    \
 		container tmp(cb_.begin(), cb_.end());                  \
