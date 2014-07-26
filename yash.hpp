@@ -98,6 +98,9 @@ private:
 // RAII wrapper for connection
 class auto_connection {
 public:
+	auto_connection()
+	: conn_() { }
+
 	auto_connection(connection const& conn)
 	: conn_(conn) { }
 
@@ -111,7 +114,6 @@ public:
 	{ conn_.disconnect(); }
 
 private:
-	auto_connection(); // = deleted
 	auto_connection(auto_connection const&); // = deleted
 	auto_connection & operator=(auto_connection const&); // = deleted
 
