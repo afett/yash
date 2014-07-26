@@ -85,6 +85,29 @@ public:
 		}
 	}
 
+#ifdef WIP
+	// step 5 try do define a reasonable equality operation
+	bool operator==(connection const& o) const
+	{
+		// this is undebatable but does not help with the scenario
+		if (&o == this) {
+			return true;
+		}
+
+		callback_ptr self(cb_.lock());
+		callback_ptr other(o.cb_.lock());
+		// ok if one of them is disconnected they can't be the same
+		if (!self || !other) {
+			// hmm return equality if both are disconnected
+			// is that a goo idea? or should this return false, too
+			return !self && !other;
+		}
+
+		// now this seems ok
+		return self.get() == other.get();
+	}
+#endif
+
 private:
 	typedef std::tr1::weak_ptr<detail::callback_base> callback_weak_ptr;
 	typedef std::tr1::shared_ptr<detail::callback_base> callback_ptr;
@@ -103,6 +126,55 @@ public:
 
 	auto_connection(connection const& conn)
 	: conn_(conn) { }
+
+#ifdef WIP
+	// step 1 trivial.
+	void operator=(connection const& conn)
+	{
+		// it seems to be approptiate to disconnect
+		// the auto_connection when assigning a new value
+		conn_.disconnect()
+		conn_ = conn;
+	}
+
+	// step 2 should assignment return the object?
+	auto_connection & operator=(connection const& conn)
+	{
+		conn_.disconnect()
+		conn_ = conn;
+		return *this;
+	}
+
+	// step 3 what if conn is identical to conn_ ?
+	// ie.
+	// yash::connection c1(sig.connect(...));
+	// yash::connection c2(c1);
+	// yash::auto_connection ac(c1);
+	// ac = c2;
+	auto_connection & operator=(connection const& conn)
+	{
+		// this will disconnect c1 and c2 which is not intuitive
+		// we could assert() that conn_ is empty, but I think thats API smell
+		// throwing an exception is IMHO out of question.
+		conn_.disconnect()
+		conn_ = conn;
+		return *this;
+	}
+
+	// step 4 compare conn_ and conn for equality
+	// see definition of equality on yash::connection
+	auto_connection & operator=(connection const& conn)
+	{
+		// problem solved?
+		if (conn_ == conn) {
+			return *this;
+		}
+		conn_.disconnect()
+		conn_ = conn;
+		return *this;
+	}
+
+#endif
 
 	void disconnect()
 	{ conn_.disconnect(); }
