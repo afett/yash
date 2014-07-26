@@ -762,6 +762,35 @@ void test_signal_deconstruct()
 	TEST_ASSERT(!conn.connected());
 }
 
+void test_connection_assign()
+{
+	call_result<> res1;
+	yash::signal<void(void)> sig1;
+	yash::connection conn1(sig1.connect(tr1::bind(&f0, tr1::ref(res1))));
+	TEST_ASSERT(conn1.connected());
+	TEST_ASSERT(sig1.slots() == 1);
+
+	call_result<> res2;
+	yash::signal<void(void)> sig2;
+	yash::connection conn2(sig2.connect(tr1::bind(&f0, tr1::ref(res2))));
+	TEST_ASSERT(conn2.connected());
+	TEST_ASSERT(sig2.slots() == 1);
+
+	conn2 = conn1;
+	TEST_ASSERT(sig1.slots() == 1);
+	TEST_ASSERT(sig2.slots() == 1);
+
+	conn2.disconnect();
+	TEST_ASSERT(sig1.slots() == 0);
+	TEST_ASSERT(sig2.slots() == 1);
+
+	sig1();
+	TEST_ASSERT(!res1.called);
+
+	sig2();
+	TEST_ASSERT(res2.called);
+}
+
 int main()
 {
 	RUN_TEST(test_arg0);
@@ -788,5 +817,6 @@ int main()
 	RUN_TEST(test_auto_connection);
 	RUN_TEST(test_functor_0arg);
 	RUN_TEST(test_signal_deconstruct);
+	RUN_TEST(test_connection_assign);
 	return 0;
 }
