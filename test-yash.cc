@@ -749,6 +749,19 @@ void test_functor_0arg()
 	TEST_ASSERT(f0.called_);
 }
 
+void test_signal_deconstruct()
+{
+	call_result<> res;
+	yash::connection conn;
+	TEST_ASSERT(!conn.connected());
+	{
+		yash::signal<void(void)> sig;
+		conn = sig.connect(tr1::bind(&f0, tr1::ref(res)));
+		TEST_ASSERT(conn.connected());
+	}
+	TEST_ASSERT(!conn.connected());
+}
+
 int main()
 {
 	RUN_TEST(test_arg0);
@@ -774,5 +787,6 @@ int main()
 	RUN_TEST(test_connect_in_callback);
 	RUN_TEST(test_auto_connection);
 	RUN_TEST(test_functor_0arg);
+	RUN_TEST(test_signal_deconstruct);
 	return 0;
 }
