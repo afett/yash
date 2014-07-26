@@ -59,6 +59,11 @@ public:
 	connection(connection const& o)
 	{ cb_ = o.cb_; }
 
+	// assignment to a connected connection
+	// will not disconnect it but leave the
+	// callback connected to the signal.
+	// there is just no external reference to
+	// it anymore.
 	connection & operator=(connection const& o)
 	{
 		if (&o != this) {
