@@ -791,6 +791,104 @@ void test_connection_assign()
 	TEST_ASSERT(res2.called);
 }
 
+class producer {
+public:
+	yash::signal_proxy<void(void)> & signal_my_event()
+	{
+		return on_event_;
+	}
+
+	// test helper
+	void trigger()
+	{
+		on_event_();
+	}
+
+private:
+	yash::signal<void(void)> on_event_;
+};
+
+// The purpose of this class is to keep the actual functions handling signals
+// private but expose an interface to connect objects of two classes in
+// a typesafe manner. The signature of the signal thus becomes the only
+// compile time dependency between those two. This particular slot type
+// allows to connect a slot to multiple signals as long as they share the
+// same signature. The drawback is an additional copy of the callback.
+template <typename T>
+class slot {
+public:
+	slot(tr1::function<T> const& cb)
+	:
+		cb_(cb)
+	{ }
+
+	void disconnect()
+	{
+		std::vector<yash::connection>::iterator it(
+			conn_.begin());
+		for (; it != conn_.end(); ++it) {
+			it->disconnect();
+		}
+		conn_.clear();
+	}
+
+	~slot()
+	{
+		cb_ = 0;
+		disconnect();
+	}
+
+private:
+	// behold the lovely syntax for defining a free standing function ...
+	friend void connect(slot<T> & sl, yash::signal_proxy<T> & sig)
+	{
+		assert(sl.cb_);
+		sl.conn_.push_back(sig.connect(sl.cb_));
+	}
+
+	tr1::function<T> cb_;
+	std::vector<yash::connection> conn_;
+};
+
+class consumer {
+public:
+	slot<void(void)> & slot_my_event()
+	{
+		return on_event_;
+	}
+
+	consumer()
+	:
+		count(0),
+		// beware of virtual functions here
+		on_event_(tr1::bind(&consumer::on_event, this))
+	{ }
+
+	size_t count;
+
+private:
+	void on_event()
+	{
+		++count;
+	}
+
+	slot<void(void)> on_event_;
+};
+
+void test_loose_coupling()
+{
+	producer p;
+	consumer c;
+
+	connect(c.slot_my_event(), p.signal_my_event());
+
+	p.trigger();
+	p.trigger();
+	p.trigger();
+
+	TEST_ASSERT(c.count == 3);
+}
+
 int main()
 {
 	RUN_TEST(test_arg0);
@@ -818,5 +916,6 @@ int main()
 	RUN_TEST(test_functor_0arg);
 	RUN_TEST(test_signal_deconstruct);
 	RUN_TEST(test_connection_assign);
+	RUN_TEST(test_loose_coupling);
 	return 0;
 }
