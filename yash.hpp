@@ -243,6 +243,12 @@ public:
 	#undef YASH_SIGNAL_CALL
 
 private:
+	/*
+	 * Rationale
+	 * While it may seem convenient to store signals in STL containers
+	 * the semantics of copying and assigning a signal are somewhat undefined.
+	 * For c++03 we have no move semantics, so just disallow those operations.
+	 */
 	signal(signal const&); // = deleted
 	signal & operator=(signal const&); // = deleted
 
