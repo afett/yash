@@ -1,0 +1,14 @@
+language: cpp
+
+compiler:
+  - clang
+  - gcc
+
+branches:
+  only:
+    - master
+
+install: true
+
+script:
+  - make run
