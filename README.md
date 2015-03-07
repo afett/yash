@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/afett/yash.svg?branch=master)](https://travis-ci.org/afett/yash)
+
 yash yet another signal header
 
 This header implements a signal class in C++.
