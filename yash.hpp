@@ -56,8 +56,7 @@ public:
 	// the connections share the actual callback closure
 	// if disconnect is called on one of them, all are
 	// disconnected
-	connection(connection const& o)
-	{ cb_ = o.cb_; }
+	connection(connection const& o) : cb_(o.cb_) { }
 
 	// assignment to a connected connection
 	// will not disconnect it but leave the
