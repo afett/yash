@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Andreas Fett.
+ * Copyright (c) 2014, 2015 Andreas Fett.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
