@@ -10,3 +10,5 @@ provided by g++ and clang++ as well as tr1/functional for std::function
 and tr1/memory for std::shared_ptr and std::weak_ptr.
 
 The API is reentrant but not thread safe.
+
+The code can be found at: https://github.com/afett/yash
