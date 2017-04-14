@@ -152,8 +152,8 @@ public:
 		}                                                   \
 		typedef std::vector<callback_weak_ptr> container;   \
 		container tmp(cb_.begin(), cb_.end());              \
-		for (auto it(tmp.begin()); it != tmp.end(); ++it) { \
-			auto cb(it->lock());                        \
+		for (auto ptr: tmp) {                               \
+			auto cb(ptr.lock());                        \
 			if (cb) {                                   \
 				cb->fn(__VA_ARGS__);                \
 			}                                           \
