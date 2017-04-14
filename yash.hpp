@@ -146,7 +146,7 @@ public:
 	connection connect(slot_type const& slot)
 	{ return connection(add_callback(slot)); }
 
-	#define YASH_SIGNAL_CALL(...)                               \
+	#define YASH_SIGNAL_CALL(args)                              \
 	{                                                           \
 		if (cb_.empty()) {                                  \
 			return;                                     \
@@ -156,7 +156,7 @@ public:
 		for (auto ptr: tmp) {                               \
 			auto cb(ptr.lock());                        \
 			if (cb) {                                   \
-				cb->fn(__VA_ARGS__);                \
+				cb->fn(args);                       \
 			}                                           \
 		}                                                   \
 	}
