@@ -77,7 +77,7 @@ public:
 
 	void disconnect()
 	{
-		callback_ptr cb(cb_.lock());
+		auto cb(cb_.lock());
 		if (cb) {
 			cb->disconnect();
 			cb_.reset();
@@ -145,20 +145,19 @@ public:
 	connection connect(slot_type const& slot)
 	{ return connection(add_callback(slot)); }
 
-	#define YASH_SIGNAL_CALL(...)                                   \
-	{                                                               \
-		if (cb_.empty()) {                                      \
-			return;                                         \
-		}                                                       \
-		typedef std::vector<callback_weak_ptr> container;       \
-		typedef typename container::const_iterator iterator;    \
-		container tmp(cb_.begin(), cb_.end());                  \
-		for (iterator it(tmp.begin()); it != tmp.end(); ++it) { \
-			callback_ptr cb(it->lock());                    \
-			if (cb) {                                       \
-				cb->fn(__VA_ARGS__);                    \
-			}                                               \
-		}                                                       \
+	#define YASH_SIGNAL_CALL(...)                               \
+	{                                                           \
+		if (cb_.empty()) {                                  \
+			return;                                     \
+		}                                                   \
+		typedef std::vector<callback_weak_ptr> container;   \
+		container tmp(cb_.begin(), cb_.end());              \
+		for (auto it(tmp.begin()); it != tmp.end(); ++it) { \
+			auto cb(it->lock());                        \
+			if (cb) {                                   \
+				cb->fn(__VA_ARGS__);                \
+			}                                           \
+		}                                                   \
 	}
 
 	void operator()()
@@ -277,7 +276,7 @@ private:
 
 	callback_ptr add_callback(slot_type const& slot)
 	{
-		callback_ptr cb(std::make_shared<callback>(this, slot));
+		auto cb(std::make_shared<callback>(this, slot));
 		cb_.push_back(cb);
 		return cb;
 	}
@@ -286,10 +285,7 @@ private:
 	{
 		assert(cb && "trying to remove null callback");
 
-		typedef std::vector<callback_ptr> container;
-		typedef typename container::iterator iterator;
-
-		for (iterator it(cb_.begin()); it != cb_.end(); ++it) {
+		for (auto it(cb_.begin()); it != cb_.end(); ++it) {
 			if (it->get() == cb) {
 				it->reset();
 				cb_.erase(it);

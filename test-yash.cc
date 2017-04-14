@@ -409,12 +409,12 @@ void test_connection_disconnect()
 	call_result<> res1;
 	call_result<> res2;
 	yash::signal<void(void)> sig;
-	yash::connection conn1(sig.connect(std::bind(
+	auto conn1(sig.connect(std::bind(
 		&f0, std::ref(res1))));
 	TEST_ASSERT(conn1.connected());
 	TEST_ASSERT(sig.slots() == 1);
 
-	yash::connection conn2(sig.connect(std::bind(
+	auto conn2(sig.connect(std::bind(
 		&f0, std::ref(res2))));
 	TEST_ASSERT(conn2.connected());
 	TEST_ASSERT(sig.slots() == 2);
@@ -446,7 +446,7 @@ void test_connection()
 	TEST_ASSERT(!conn.connected());
 	TEST_ASSERT(sig.slots() == 0);
 
-	yash::connection conn1(sig.connect(std::bind(
+	auto conn1(sig.connect(std::bind(
 		&f0, std::ref(res))));
 	TEST_ASSERT(sig.slots() == 1);
 	TEST_ASSERT(conn1.connected());
@@ -454,7 +454,7 @@ void test_connection()
 	conn = conn1;
 	TEST_ASSERT(conn.connected());
 
-	yash::connection conn2(conn);
+	auto conn2(conn);
 	TEST_ASSERT(conn2.connected());
 
 	TEST_ASSERT(sig.slots() == 1);
@@ -477,7 +477,7 @@ void test_connection_disconnect_self()
 	bool called(false);
 	yash::signal<void(void)> sig;
 	yash::connection conn;
-	yash::connection conn1(sig.connect(std::bind(
+	auto conn1(sig.connect(std::bind(
 		&disconnect, std::ref(called), std::ref(conn))));
 	TEST_ASSERT(sig.slots() == 1);
 
@@ -501,11 +501,11 @@ void test_connection_disconnect_next()
 	bool called(false);
 	yash::signal<void(void)> sig;
 	yash::connection conn;
-	yash::connection conn1(sig.connect(std::bind(
+	auto conn1(sig.connect(std::bind(
 		&disconnect, std::ref(called), std::ref(conn))));
 
 	call_result<> res;
-	yash::connection conn2(sig.connect(std::bind(
+	auto conn2(sig.connect(std::bind(
 		&f0, std::ref(res))));
 	TEST_ASSERT(sig.slots() == 2);
 
@@ -536,9 +536,9 @@ void test_connection_disconnect_prev()
 	yash::connection conn;
 
 	call_result<> res;
-	yash::connection conn1(sig.connect(std::bind(
+	auto conn1(sig.connect(std::bind(
 		&f0, std::ref(res))));
-	yash::connection conn2(sig.connect(std::bind(
+	auto conn2(sig.connect(std::bind(
 		&disconnect, std::ref(called), std::ref(conn))));
 	TEST_ASSERT(sig.slots() == 2);
 
@@ -586,7 +586,7 @@ public:
 	void disconnect_all()
 	{
 		++called;
-		for (size_t i(0); i < conn_.size(); ++i) {
+		for (auto i(0U); i < conn_.size(); ++i) {
 			TEST_ASSERT(conn_[i].connected());
 			conn_[i].disconnect();
 			TEST_ASSERT(!conn_[i].connected());
@@ -764,13 +764,13 @@ void test_connection_assign()
 {
 	call_result<> res1;
 	yash::signal<void(void)> sig1;
-	yash::connection conn1(sig1.connect(std::bind(&f0, std::ref(res1))));
+	auto conn1(sig1.connect(std::bind(&f0, std::ref(res1))));
 	TEST_ASSERT(conn1.connected());
 	TEST_ASSERT(sig1.slots() == 1);
 
 	call_result<> res2;
 	yash::signal<void(void)> sig2;
-	yash::connection conn2(sig2.connect(std::bind(&f0, std::ref(res2))));
+	auto conn2(sig2.connect(std::bind(&f0, std::ref(res2))));
 	TEST_ASSERT(conn2.connected());
 	TEST_ASSERT(sig2.slots() == 1);
 
@@ -822,8 +822,7 @@ public:
 
 	void disconnect()
 	{
-		std::vector<yash::connection>::iterator it(
-			conn_.begin());
+		auto it(conn_.begin());
 		for (; it != conn_.end(); ++it) {
 			it->disconnect();
 		}
