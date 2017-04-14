@@ -1,7 +1,7 @@
 TARGET=test_yash
 
 CXX ?= g++
-CXXFLAGS=-Wall -Werror -Wextra
+CXXFLAGS=-Wall -Werror -Wextra -std=c++11
 CPPFLAGS=
 LDFLAGS=
 
