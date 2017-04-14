@@ -277,7 +277,7 @@ private:
 
 	callback_ptr add_callback(slot_type const& slot)
 	{
-		callback_ptr cb(new callback(this, slot));
+		callback_ptr cb(std::make_shared<callback>(this, slot));
 		cb_.push_back(cb);
 		return cb;
 	}
