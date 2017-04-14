@@ -46,12 +46,6 @@ public:
 	virtual ~callback_base() {}
 };
 
-template <typename T>
-std::vector<std::weak_ptr<T>> weak_copy(std::vector<std::shared_ptr<T>> const& v)
-{
-	return {v.begin(), v.end()};
-}
-
 }
 
 // handle for single slot connected to a signal
@@ -152,28 +146,13 @@ public:
 	connection connect(slot_type const& slot)
 	{ return connection(add_callback(slot)); }
 
-	#define YASH_SIGNAL_CALL(args)                              \
-	{                                                           \
-		if (cb_.empty()) {                                  \
-			return;                                     \
-		}                                                   \
-		for (auto ptr: detail::weak_copy(cb_)) {            \
-			auto cb(ptr.lock());                        \
-			if (cb) {                                   \
-				cb->fn(args);                       \
-			}                                           \
-		}                                                   \
-	}
-
 	template <typename... Args>
 	void operator()(Args&&... args)
-	{ YASH_SIGNAL_CALL(std::forward<Args>(args)...); }
+	{ call_each({cb_.begin(), cb_.end()}, std::forward<Args>(args)...); }
 
 	template <typename... Args>
 	void operator()(Args&&... args) const
-	{ YASH_SIGNAL_CALL(std::forward<Args>(args)...); }
-
-	#undef YASH_SIGNAL_CALL
+	{ call_each({cb_.begin(), cb_.end()}, std::forward<Args>(args)...); }
 
 private:
 	/*
@@ -225,6 +204,20 @@ private:
 		assert(it != cb_.end() && "trying to remove invalid callback");
 		it->reset();
 		cb_.erase(it);
+	}
+
+	template <typename... Args>
+	static void call_each(std::vector<callback_weak_ptr> const& cbs, Args&&... args)
+	{
+		if (cbs.empty()) {
+			return;
+		}
+		for (auto ptr: cbs) {
+			auto cb(ptr.lock());
+			if (cb) {
+				cb->fn(std::forward<Args>(args)...);
+			}
+		}
 	}
 
 	std::vector<callback_ptr> cb_;
