@@ -46,6 +46,12 @@ public:
 	virtual ~callback_base() {}
 };
 
+template <typename T>
+std::vector<std::weak_ptr<T>> weak_copy(std::vector<std::shared_ptr<T>> const& v)
+{
+	return {v.begin(), v.end()};
+}
+
 }
 
 // handle for single slot connected to a signal
@@ -151,9 +157,7 @@ public:
 		if (cb_.empty()) {                                  \
 			return;                                     \
 		}                                                   \
-		typedef std::vector<callback_weak_ptr> container;   \
-		container tmp(cb_.begin(), cb_.end());              \
-		for (auto ptr: tmp) {                               \
+		for (auto ptr: detail::weak_copy(cb_)) {            \
 			auto cb(ptr.lock());                        \
 			if (cb) {                                   \
 				cb->fn(args);                       \
