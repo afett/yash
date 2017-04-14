@@ -29,6 +29,7 @@
 
 #include <cassert>
 #include <functional>
+#include <algorithm>
 #include <memory>
 #include <vector>
 
@@ -285,15 +286,12 @@ private:
 	{
 		assert(cb && "trying to remove null callback");
 
-		for (auto it(cb_.begin()); it != cb_.end(); ++it) {
-			if (it->get() == cb) {
-				it->reset();
-				cb_.erase(it);
-				return;
-			}
-		}
+		auto it(std::find_if(cb_.begin(), cb_.end(),
+			[cb](callback_ptr const& ptr){ return ptr.get() == cb; }));
 
-		assert(false && "trying to remove invalid callback");
+		assert(it != cb_.end() && "trying to remove invalid callback");
+		it->reset();
+		cb_.erase(it);
 	}
 
 	std::vector<callback_ptr> cb_;
