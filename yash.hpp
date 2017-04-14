@@ -211,9 +211,8 @@ private:
 
 	callback_ptr add_callback(slot_type const& slot)
 	{
-		auto cb(std::make_shared<callback>(this, slot));
-		cb_.push_back(cb);
-		return cb;
+		cb_.push_back(std::make_shared<callback>(this, slot));
+		return cb_.back();
 	}
 
 	void del_callback(callback * cb)
