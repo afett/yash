@@ -193,8 +193,8 @@ private:
 		{
 			if (owner) {
 				owner->del_callback(this);
-				owner = 0;
-				fn = 0;
+				owner = nullptr;
+				fn = nullptr;
 			}
 		}
 
