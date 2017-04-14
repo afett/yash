@@ -111,9 +111,9 @@ public:
 	{ conn_.disconnect(); }
 
 private:
-	auto_connection(); // = deleted
-	auto_connection(auto_connection const&); // = deleted
-	auto_connection & operator=(auto_connection const&); // = deleted
+	auto_connection() = delete;
+	auto_connection(auto_connection const&) = delete;
+	auto_connection & operator=(auto_connection const&) = delete;
 
 	connection conn_;
 };
@@ -161,8 +161,8 @@ private:
 	 * the semantics of copying and assigning a signal are somewhat undefined.
 	 * For c++03 we have no move semantics, so just disallow those operations.
 	 */
-	signal(signal const&); // = deleted
-	signal & operator=(signal const&); // = deleted
+	signal(signal const&) = delete;
+	signal & operator=(signal const&) = delete;
 
 	struct callback : public detail::callback_base {
 		callback(signal<T> *owner_, slot_type const& fn_)
