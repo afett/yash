@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2015 Andreas Fett.
+ * Copyright (c) 2014, 2015, 2017 Andreas Fett.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,8 +28,8 @@
 #define YASH_HPP
 
 #include <cassert>
-#include <tr1/functional>
-#include <tr1/memory>
+#include <functional>
+#include <memory>
 #include <vector>
 
 // yet another signal library^W header
@@ -85,8 +85,8 @@ public:
 	}
 
 private:
-	typedef std::tr1::weak_ptr<detail::callback_base> callback_weak_ptr;
-	typedef std::tr1::shared_ptr<detail::callback_base> callback_ptr;
+	typedef std::weak_ptr<detail::callback_base> callback_weak_ptr;
+	typedef std::shared_ptr<detail::callback_base> callback_ptr;
 
 	template <typename T> friend class signal;
 	connection(callback_ptr const& cb) : cb_(cb) { }
@@ -122,7 +122,7 @@ private:
 template <typename T>
 class signal_proxy {
 public:
-	typedef std::tr1::function<T> slot_type;
+	typedef std::function<T> slot_type;
 
 	virtual connection connect(slot_type const&) = 0;
 	virtual ~signal_proxy() {}
@@ -272,8 +272,8 @@ private:
 		slot_type fn;
 	};
 
-	typedef std::tr1::shared_ptr<callback> callback_ptr;
-	typedef std::tr1::weak_ptr<callback> callback_weak_ptr;
+	typedef std::shared_ptr<callback> callback_ptr;
+	typedef std::weak_ptr<callback> callback_weak_ptr;
 
 	callback_ptr add_callback(slot_type const& slot)
 	{

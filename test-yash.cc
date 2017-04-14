@@ -14,8 +14,6 @@
 	test();                              \
 }
 
-namespace tr1 = std::tr1;
-
 struct nil {};
 
 template <typename A0 = nil,
@@ -167,8 +165,8 @@ void test_arg0()
 {
 	call_result<> res;
 	yash::signal<void(void)> sig;
-	sig.connect(tr1::bind(
-		&f0, tr1::ref(res)));
+	sig.connect(std::bind(
+		&f0, std::ref(res)));
 	sig();
 	TEST_ASSERT(res.called);
 }
@@ -177,9 +175,9 @@ void test_arg1()
 {
 	call_result<int> res;
 	yash::signal<void(int)> sig;
-	sig.connect(tr1::bind(
-		&f<int>, tr1::ref(res),
-		tr1::placeholders::_1));
+	sig.connect(std::bind(
+		&f<int>, std::ref(res),
+		std::placeholders::_1));
 	sig(1);
 	TEST_ASSERT(res.called);
 	TEST_ASSERT(res.a0 == 1);
@@ -189,10 +187,10 @@ void test_arg2()
 {
 	call_result<int, int> res;
 	yash::signal<void(int, int)> sig;
-	sig.connect(tr1::bind(
-		&f<int, int>, tr1::ref(res),
-		tr1::placeholders::_1,
-		tr1::placeholders::_2));
+	sig.connect(std::bind(
+		&f<int, int>, std::ref(res),
+		std::placeholders::_1,
+		std::placeholders::_2));
 	sig(1, 2);
 	TEST_ASSERT(res.called);
 	TEST_ASSERT(res.a0 == 1);
@@ -203,11 +201,11 @@ void test_arg3()
 {
 	call_result<int, int, int> res;
 	yash::signal<void(int, int, int)> sig;
-	sig.connect(tr1::bind(
-		&f<int, int, int>, tr1::ref(res),
-		tr1::placeholders::_1,
-		tr1::placeholders::_2,
-		tr1::placeholders::_3));
+	sig.connect(std::bind(
+		&f<int, int, int>, std::ref(res),
+		std::placeholders::_1,
+		std::placeholders::_2,
+		std::placeholders::_3));
 	sig(1, 2, 3);
 	TEST_ASSERT(res.called);
 	TEST_ASSERT(res.a0 == 1);
@@ -219,12 +217,12 @@ void test_arg4()
 {
 	call_result<int, int, int, int> res;
 	yash::signal<void(int, int, int, int)> sig;
-	sig.connect(tr1::bind(
-		&f<int, int, int, int>, tr1::ref(res),
-		tr1::placeholders::_1,
-		tr1::placeholders::_2,
-		tr1::placeholders::_3,
-		tr1::placeholders::_4));
+	sig.connect(std::bind(
+		&f<int, int, int, int>, std::ref(res),
+		std::placeholders::_1,
+		std::placeholders::_2,
+		std::placeholders::_3,
+		std::placeholders::_4));
 	sig(1, 2, 3, 4);
 	TEST_ASSERT(res.called);
 	TEST_ASSERT(res.a0 == 1);
@@ -237,13 +235,13 @@ void test_arg5()
 {
 	call_result<int, int, int, int, int> res;
 	yash::signal<void(int, int, int, int, int)> sig;
-	sig.connect(tr1::bind(
-		&f<int, int, int, int, int>, tr1::ref(res),
-		tr1::placeholders::_1,
-		tr1::placeholders::_2,
-		tr1::placeholders::_3,
-		tr1::placeholders::_4,
-		tr1::placeholders::_5));
+	sig.connect(std::bind(
+		&f<int, int, int, int, int>, std::ref(res),
+		std::placeholders::_1,
+		std::placeholders::_2,
+		std::placeholders::_3,
+		std::placeholders::_4,
+		std::placeholders::_5));
 	sig(1, 2, 3, 4, 5);
 	TEST_ASSERT(res.called);
 	TEST_ASSERT(res.a0 == 1);
@@ -257,14 +255,14 @@ void test_arg6()
 {
 	call_result<int, int, int, int, int, int> res;
 	yash::signal<void(int, int, int, int, int, int)> sig;
-	sig.connect(tr1::bind(
-		&f<int, int, int, int, int, int>, tr1::ref(res),
-		tr1::placeholders::_1,
-		tr1::placeholders::_2,
-		tr1::placeholders::_3,
-		tr1::placeholders::_4,
-		tr1::placeholders::_5,
-		tr1::placeholders::_6));
+	sig.connect(std::bind(
+		&f<int, int, int, int, int, int>, std::ref(res),
+		std::placeholders::_1,
+		std::placeholders::_2,
+		std::placeholders::_3,
+		std::placeholders::_4,
+		std::placeholders::_5,
+		std::placeholders::_6));
 	sig(1, 2, 3, 4, 5, 6);
 	TEST_ASSERT(res.called);
 	TEST_ASSERT(res.a0 == 1);
@@ -279,15 +277,15 @@ void test_arg7()
 {
 	call_result<int, int, int, int, int, int, int> res;
 	yash::signal<void(int, int, int, int, int, int, int)> sig;
-	sig.connect(tr1::bind(
-		&f<int, int, int, int, int, int, int>, tr1::ref(res),
-		tr1::placeholders::_1,
-		tr1::placeholders::_2,
-		tr1::placeholders::_3,
-		tr1::placeholders::_4,
-		tr1::placeholders::_5,
-		tr1::placeholders::_6,
-		tr1::placeholders::_7));
+	sig.connect(std::bind(
+		&f<int, int, int, int, int, int, int>, std::ref(res),
+		std::placeholders::_1,
+		std::placeholders::_2,
+		std::placeholders::_3,
+		std::placeholders::_4,
+		std::placeholders::_5,
+		std::placeholders::_6,
+		std::placeholders::_7));
 	sig(1, 2, 3, 4, 5, 6, 7);
 	TEST_ASSERT(res.called);
 	TEST_ASSERT(res.a0 == 1);
@@ -303,16 +301,16 @@ void test_arg8()
 {
 	call_result<int, int, int, int, int, int, int, int> res;
 	yash::signal<void(int, int, int, int, int, int, int, int)> sig;
-	sig.connect(tr1::bind(
-		&f<int, int, int, int, int, int, int, int>, tr1::ref(res),
-		tr1::placeholders::_1,
-		tr1::placeholders::_2,
-		tr1::placeholders::_3,
-		tr1::placeholders::_4,
-		tr1::placeholders::_5,
-		tr1::placeholders::_6,
-		tr1::placeholders::_7,
-		tr1::placeholders::_8));
+	sig.connect(std::bind(
+		&f<int, int, int, int, int, int, int, int>, std::ref(res),
+		std::placeholders::_1,
+		std::placeholders::_2,
+		std::placeholders::_3,
+		std::placeholders::_4,
+		std::placeholders::_5,
+		std::placeholders::_6,
+		std::placeholders::_7,
+		std::placeholders::_8));
 	sig(1, 2, 3, 4, 5, 6, 7, 8);
 	TEST_ASSERT(res.called);
 	TEST_ASSERT(res.a0 == 1);
@@ -329,8 +327,8 @@ void test_memfun()
 {
 	A a;
 	yash::signal<void(std::string)> sig;
-	sig.connect(tr1::bind(&A::foo,
-		&a, tr1::placeholders::_1));
+	sig.connect(std::bind(&A::foo,
+		&a, std::placeholders::_1));
 	sig("hello");
 	TEST_ASSERT(a.foo_called_);
 	TEST_ASSERT(a.foo_arg_ == "hello");
@@ -340,7 +338,7 @@ void test_const_memfun()
 {
 	A a;
 	yash::signal<void(void)> sig;
-	sig.connect(tr1::bind(&A::bar, tr1::ref(a)));
+	sig.connect(std::bind(&A::bar, std::ref(a)));
 	sig();
 	TEST_ASSERT(a.bar_called_);
 }
@@ -373,8 +371,8 @@ void test_signal_proxy()
 
 	call_result<> res1;
 	call_result<> res2;
-	b.sig().connect(tr1::bind(&f0, tr1::ref(res1)));
-	b.sigr.connect(tr1::bind(&f0, tr1::ref(res2)));
+	b.sig().connect(std::bind(&f0, std::ref(res1)));
+	b.sigr.connect(std::bind(&f0, std::ref(res2)));
 	b.run();
 
 	TEST_ASSERT(res1.called);
@@ -391,16 +389,16 @@ void test_call_order()
 {
 	yash::signal<void(void)> sig;
 	size_t called(0);
-	sig.connect(tr1::bind(
-		&count_call, tr1::ref(called), 0));
-	sig.connect(tr1::bind(
-		&count_call, tr1::ref(called), 1));
-	sig.connect(tr1::bind(
-		&count_call, tr1::ref(called), 2));
-	sig.connect(tr1::bind(
-		&count_call, tr1::ref(called), 3));
-	sig.connect(tr1::bind(
-		&count_call, tr1::ref(called), 4));
+	sig.connect(std::bind(
+		&count_call, std::ref(called), 0));
+	sig.connect(std::bind(
+		&count_call, std::ref(called), 1));
+	sig.connect(std::bind(
+		&count_call, std::ref(called), 2));
+	sig.connect(std::bind(
+		&count_call, std::ref(called), 3));
+	sig.connect(std::bind(
+		&count_call, std::ref(called), 4));
 	TEST_ASSERT(sig.slots() == 5);
 	sig();
 	TEST_ASSERT(called == 5);
@@ -411,13 +409,13 @@ void test_connection_disconnect()
 	call_result<> res1;
 	call_result<> res2;
 	yash::signal<void(void)> sig;
-	yash::connection conn1(sig.connect(tr1::bind(
-		&f0, tr1::ref(res1))));
+	yash::connection conn1(sig.connect(std::bind(
+		&f0, std::ref(res1))));
 	TEST_ASSERT(conn1.connected());
 	TEST_ASSERT(sig.slots() == 1);
 
-	yash::connection conn2(sig.connect(tr1::bind(
-		&f0, tr1::ref(res2))));
+	yash::connection conn2(sig.connect(std::bind(
+		&f0, std::ref(res2))));
 	TEST_ASSERT(conn2.connected());
 	TEST_ASSERT(sig.slots() == 2);
 
@@ -448,8 +446,8 @@ void test_connection()
 	TEST_ASSERT(!conn.connected());
 	TEST_ASSERT(sig.slots() == 0);
 
-	yash::connection conn1(sig.connect(tr1::bind(
-		&f0, tr1::ref(res))));
+	yash::connection conn1(sig.connect(std::bind(
+		&f0, std::ref(res))));
 	TEST_ASSERT(sig.slots() == 1);
 	TEST_ASSERT(conn1.connected());
 
@@ -479,8 +477,8 @@ void test_connection_disconnect_self()
 	bool called(false);
 	yash::signal<void(void)> sig;
 	yash::connection conn;
-	yash::connection conn1(sig.connect(tr1::bind(
-		&disconnect, tr1::ref(called), tr1::ref(conn))));
+	yash::connection conn1(sig.connect(std::bind(
+		&disconnect, std::ref(called), std::ref(conn))));
 	TEST_ASSERT(sig.slots() == 1);
 
 	conn = conn1;
@@ -503,12 +501,12 @@ void test_connection_disconnect_next()
 	bool called(false);
 	yash::signal<void(void)> sig;
 	yash::connection conn;
-	yash::connection conn1(sig.connect(tr1::bind(
-		&disconnect, tr1::ref(called), tr1::ref(conn))));
+	yash::connection conn1(sig.connect(std::bind(
+		&disconnect, std::ref(called), std::ref(conn))));
 
 	call_result<> res;
-	yash::connection conn2(sig.connect(tr1::bind(
-		&f0, tr1::ref(res))));
+	yash::connection conn2(sig.connect(std::bind(
+		&f0, std::ref(res))));
 	TEST_ASSERT(sig.slots() == 2);
 
 	conn = conn2;
@@ -538,10 +536,10 @@ void test_connection_disconnect_prev()
 	yash::connection conn;
 
 	call_result<> res;
-	yash::connection conn1(sig.connect(tr1::bind(
-		&f0, tr1::ref(res))));
-	yash::connection conn2(sig.connect(tr1::bind(
-		&disconnect, tr1::ref(called), tr1::ref(conn))));
+	yash::connection conn1(sig.connect(std::bind(
+		&f0, std::ref(res))));
+	yash::connection conn2(sig.connect(std::bind(
+		&disconnect, std::ref(called), std::ref(conn))));
 	TEST_ASSERT(sig.slots() == 2);
 
 	conn = conn1;
@@ -570,14 +568,14 @@ public:
 	:
 		called(0)
 	{
-		conn_.push_back(sig.connect(tr1::bind(&E::foo, this)));
-		conn_.push_back(sig.connect(tr1::bind(&E::foo, this)));
-		conn_.push_back(sig.connect(tr1::bind(&E::foo, this)));
-		conn_.push_back(sig.connect(tr1::bind(&E::foo, this)));
-		conn_.push_back(sig.connect(tr1::bind(&E::disconnect_all, this)));
-		conn_.push_back(sig.connect(tr1::bind(&E::foo, this)));
-		conn_.push_back(sig.connect(tr1::bind(&E::foo, this)));
-		conn_.push_back(sig.connect(tr1::bind(&E::foo, this)));
+		conn_.push_back(sig.connect(std::bind(&E::foo, this)));
+		conn_.push_back(sig.connect(std::bind(&E::foo, this)));
+		conn_.push_back(sig.connect(std::bind(&E::foo, this)));
+		conn_.push_back(sig.connect(std::bind(&E::foo, this)));
+		conn_.push_back(sig.connect(std::bind(&E::disconnect_all, this)));
+		conn_.push_back(sig.connect(std::bind(&E::foo, this)));
+		conn_.push_back(sig.connect(std::bind(&E::foo, this)));
+		conn_.push_back(sig.connect(std::bind(&E::foo, this)));
 	}
 
 	void foo()
@@ -636,7 +634,7 @@ void test_const_signal()
 	C c;
 
 	call_result<> res;
-	c.sig.connect(tr1::bind(&f0, tr1::ref(res)));
+	c.sig.connect(std::bind(&f0, std::ref(res)));
 	c.run();
 
 	TEST_ASSERT(res.called);
@@ -645,7 +643,7 @@ void test_const_signal()
 void connect(size_t & called, yash::signal<void(void)> & sig)
 {
 	++called;
-	sig.connect(tr1::bind(&connect, tr1::ref(called), tr1::ref(sig)));
+	sig.connect(std::bind(&connect, std::ref(called), std::ref(sig)));
 }
 
 void test_connect_in_callback()
@@ -653,7 +651,7 @@ void test_connect_in_callback()
 	size_t called(0);
 	yash::signal<void(void)> sig;
 
-	sig.connect(tr1::bind(&connect, tr1::ref(called), tr1::ref(sig)));
+	sig.connect(std::bind(&connect, std::ref(called), std::ref(sig)));
 	TEST_ASSERT(sig.slots() == 1);
 	sig();
 	TEST_ASSERT(called == 1);
@@ -672,17 +670,17 @@ void test_auto_connection()
 	call_result<> res3;
 	yash::signal<void(void)> sig;
 
-	yash::auto_connection conn1(sig.connect(tr1::bind(
-		&f0, tr1::ref(res1))));
+	yash::auto_connection conn1(sig.connect(std::bind(
+		&f0, std::ref(res1))));
 	TEST_ASSERT(conn1.connected());
 	{
-		yash::auto_connection conn2(sig.connect(tr1::bind(
-			&f0, tr1::ref(res2))));
+		yash::auto_connection conn2(sig.connect(std::bind(
+			&f0, std::ref(res2))));
 		TEST_ASSERT(conn2.connected());
 		TEST_ASSERT(sig.slots() == 2);
 
-		yash::auto_connection conn3(sig.connect(tr1::bind(
-			&f0, tr1::ref(res3))));
+		yash::auto_connection conn3(sig.connect(std::bind(
+			&f0, std::ref(res3))));
 		TEST_ASSERT(conn3.connected());
 		TEST_ASSERT(sig.slots() == 3);
 
@@ -743,7 +741,7 @@ void test_functor_0arg()
 	TEST_ASSERT(!f0.called_);
 
 	// this will not
-	sig.connect(std::tr1::ref(f0));
+	sig.connect(std::ref(f0));
 	sig();
 
 	TEST_ASSERT(f0.called_);
@@ -756,7 +754,7 @@ void test_signal_deconstruct()
 	TEST_ASSERT(!conn.connected());
 	{
 		yash::signal<void(void)> sig;
-		conn = sig.connect(tr1::bind(&f0, tr1::ref(res)));
+		conn = sig.connect(std::bind(&f0, std::ref(res)));
 		TEST_ASSERT(conn.connected());
 	}
 	TEST_ASSERT(!conn.connected());
@@ -766,13 +764,13 @@ void test_connection_assign()
 {
 	call_result<> res1;
 	yash::signal<void(void)> sig1;
-	yash::connection conn1(sig1.connect(tr1::bind(&f0, tr1::ref(res1))));
+	yash::connection conn1(sig1.connect(std::bind(&f0, std::ref(res1))));
 	TEST_ASSERT(conn1.connected());
 	TEST_ASSERT(sig1.slots() == 1);
 
 	call_result<> res2;
 	yash::signal<void(void)> sig2;
-	yash::connection conn2(sig2.connect(tr1::bind(&f0, tr1::ref(res2))));
+	yash::connection conn2(sig2.connect(std::bind(&f0, std::ref(res2))));
 	TEST_ASSERT(conn2.connected());
 	TEST_ASSERT(sig2.slots() == 1);
 
@@ -817,7 +815,7 @@ private:
 template <typename T>
 class slot {
 public:
-	slot(tr1::function<T> const& cb)
+	slot(std::function<T> const& cb)
 	:
 		cb_(cb)
 	{ }
@@ -846,7 +844,7 @@ private:
 		sl.conn_.push_back(sig.connect(sl.cb_));
 	}
 
-	tr1::function<T> cb_;
+	std::function<T> cb_;
 	std::vector<yash::connection> conn_;
 };
 
@@ -861,7 +859,7 @@ public:
 	:
 		count(0),
 		// beware of virtual functions here
-		on_event_(tr1::bind(&consumer::on_event, this))
+		on_event_(std::bind(&consumer::on_event, this))
 	{ }
 
 	size_t count;
