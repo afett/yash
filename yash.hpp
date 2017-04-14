@@ -161,83 +161,13 @@ public:
 		}                                                   \
 	}
 
-	void operator()()
-	{ YASH_SIGNAL_CALL(); }
+	template <typename... Args>
+	void operator()(Args&&... args)
+	{ YASH_SIGNAL_CALL(std::forward<Args>(args)...); }
 
-	void operator()() const
-	{ YASH_SIGNAL_CALL(); }
-
-	template <typename A0>
-	void operator()(A0 a0)
-	{ YASH_SIGNAL_CALL(a0); }
-
-	template <typename A0>
-	void operator()(A0 a0) const
-	{ YASH_SIGNAL_CALL(a0); }
-
-	template <typename A0, typename A1>
-	void operator()(A0 a0, A1 a1)
-	{ YASH_SIGNAL_CALL(a0, a1); }
-
-	template <typename A0, typename A1>
-	void operator()(A0 a0, A1 a1) const
-	{ YASH_SIGNAL_CALL(a0, a1); }
-
-	template <typename A0, typename A1, typename A2>
-	void operator()(A0 a0, A1 a1, A2 a2)
-	{ YASH_SIGNAL_CALL(a0, a1, a2); }
-
-	template <typename A0, typename A1, typename A2>
-	void operator()(A0 a0, A1 a1, A2 a2) const
-	{ YASH_SIGNAL_CALL(a0, a1, a2); }
-
-	template <typename A0, typename A1, typename A2, typename A3>
-	void operator()(A0 a0, A1 a1, A2 a2, A3 a3)
-	{ YASH_SIGNAL_CALL(a0, a1, a2, a3); }
-
-	template <typename A0, typename A1, typename A2, typename A3>
-	void operator()(A0 a0, A1 a1, A2 a2, A3 a3) const
-	{ YASH_SIGNAL_CALL(a0, a1, a2, a3); }
-
-	template <typename A0, typename A1, typename A2, typename A3,
-		  typename A4>
-	void operator()(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4)
-	{ YASH_SIGNAL_CALL(a0, a1, a2, a3, a4); }
-
-	template <typename A0, typename A1, typename A2, typename A3,
-		  typename A4>
-	void operator()(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4) const
-	{ YASH_SIGNAL_CALL(a0, a1, a2, a3, a4); }
-
-	template <typename A0, typename A1, typename A2, typename A3,
-		  typename A4, typename A5>
-	void operator()(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5)
-	{ YASH_SIGNAL_CALL(a0, a1, a2, a3, a4, a5); }
-
-	template <typename A0, typename A1, typename A2, typename A3,
-		  typename A4, typename A5>
-	void operator()(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5) const
-	{ YASH_SIGNAL_CALL(a0, a1, a2, a3, a4, a5); }
-
-	template <typename A0, typename A1, typename A2, typename A3,
-		  typename A4, typename A5, typename A6>
-	void operator()(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6)
-	{ YASH_SIGNAL_CALL(a0, a1, a2, a3, a4, a5, a6); }
-
-	template <typename A0, typename A1, typename A2, typename A3,
-		  typename A4, typename A5, typename A6>
-	void operator()(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6) const
-	{ YASH_SIGNAL_CALL(a0, a1, a2, a3, a4, a5, a6); }
-
-	template <typename A0, typename A1, typename A2, typename A3,
-		  typename A4, typename A5, typename A6, typename A7>
-	void operator()(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7)
-	{ YASH_SIGNAL_CALL(a0, a1, a2, a3, a4, a5, a6, a7); }
-
-	template <typename A0, typename A1, typename A2, typename A3,
-		  typename A4, typename A5, typename A6, typename A7>
-	void operator()(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7) const
-	{ YASH_SIGNAL_CALL(a0, a1, a2, a3, a4, a5, a6, a7); }
+	template <typename... Args>
+	void operator()(Args&&... args) const
+	{ YASH_SIGNAL_CALL(std::forward<Args>(args)...); }
 
 	#undef YASH_SIGNAL_CALL
 
