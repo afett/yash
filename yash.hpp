@@ -54,16 +54,13 @@ public:
 	connection() : cb_() { }
 	~connection() { cb_.reset(); }
 
-	// the connections share the actual callback closure
-	// if disconnect is called on one of them, all are
-	// disconnected
+	// The connections share the actual callback closure if disconnect
+	// is called on one of them, all are disconnected.
 	connection(connection const& o) : cb_(o.cb_) { }
 
-	// assignment to a connected connection
-	// will not disconnect it but leave the
-	// callback connected to the signal.
-	// there is just no external reference to
-	// it anymore.
+	// Assignment to a connected connection will not disconnect it but
+	// leave the callback connected to the signal. There is just no
+	// external reference to it anymore.
 	connection & operator=(connection const& o)
 	{
 		if (&o != this) {
@@ -118,8 +115,7 @@ private:
 	connection conn_;
 };
 
-// interface to expose a signal for a user without
-// allowing to invoke it.
+// Interface to expose a signal for a user without allowing to invoke it
 template <typename T>
 class signal_proxy {
 public:
@@ -141,8 +137,8 @@ public:
 	size_t slots() const
 	{ return cb_.size(); }
 
-	// the callback will not be called for any already active
-	// invokation of this signal at the time connect() is called.
+	// The callback will not be called for any already active invokation
+	// of this signal at the time connect() is called.
 	connection connect(slot_type const& slot)
 	{ return connection(add_callback(slot)); }
 
@@ -165,12 +161,11 @@ public:
 	}
 
 private:
-	/*
-	 * Rationale
-	 * While it may seem convenient to store signals in STL containers
-	 * the semantics of copying and assigning a signal are somewhat undefined.
-	 * For c++03 we have no move semantics, so just disallow those operations.
-	 */
+	// Rationale
+	// While it may seem convenient to store signals in STL containers
+	// the semantics of copying and assigning a signal are somewhat
+	// undefined.  For c++03 we have no move semantics, so just disallow
+	// those operations.
 	signal(signal const&) = delete;
 	signal & operator=(signal const&) = delete;
 
