@@ -822,10 +822,8 @@ public:
 
 	void disconnect()
 	{
-		auto it(conn_.begin());
-		for (; it != conn_.end(); ++it) {
-			it->disconnect();
-		}
+		std::for_each(conn_.begin(), conn_.end(),
+			[](yash::connection & conn){ conn.disconnect(); });
 		conn_.clear();
 	}
 
