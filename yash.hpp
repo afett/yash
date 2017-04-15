@@ -148,7 +148,8 @@ public:
 		if (cb_.empty()) {
 			return;
 		}
-		call_each({cb_.begin(), cb_.end()}, std::forward<Args>(args)...);
+		call_each({cb_.begin(), cb_.end()},
+			std::forward<Args>(args)...);
 	}
 
 	template <typename... Args>
@@ -157,7 +158,8 @@ public:
 		if (cb_.empty()) {
 			return;
 		}
-		call_each({cb_.begin(), cb_.end()}, std::forward<Args>(args)...);
+		call_each({cb_.begin(), cb_.end()},
+			std::forward<Args>(args)...);
 	}
 
 private:
