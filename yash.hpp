@@ -148,11 +148,21 @@ public:
 
 	template <typename... Args>
 	void operator()(Args&&... args)
-	{ call_each({cb_.begin(), cb_.end()}, std::forward<Args>(args)...); }
+	{
+		if (cb_.empty()) {
+			return;
+		}
+		call_each({cb_.begin(), cb_.end()}, std::forward<Args>(args)...);
+	}
 
 	template <typename... Args>
 	void operator()(Args&&... args) const
-	{ call_each({cb_.begin(), cb_.end()}, std::forward<Args>(args)...); }
+	{
+		if (cb_.empty()) {
+			return;
+		}
+		call_each({cb_.begin(), cb_.end()}, std::forward<Args>(args)...);
+	}
 
 private:
 	/*
@@ -209,9 +219,6 @@ private:
 	template <typename... Args>
 	static void call_each(std::vector<callback_weak_ptr> const& cbs, Args&&... args)
 	{
-		if (cbs.empty()) {
-			return;
-		}
 		for (auto ptr: cbs) {
 			auto cb(ptr.lock());
 			if (cb) {
