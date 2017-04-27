@@ -4,6 +4,9 @@ compiler:
   - clang
   - gcc
 
+dist: trusty
+sudo: false
+
 branches:
   only:
     - master
