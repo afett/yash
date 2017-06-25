@@ -1,5 +1,6 @@
 #include <cassert>
 #include <iostream>
+#include <map>
 #include <string>
 #include <vector>
 
@@ -884,6 +885,74 @@ void test_loose_coupling()
 	TEST_ASSERT(c.count == 3);
 }
 
+void test_movable_signal()
+{
+	call_result<> res_foo;
+	call_result<> res_bar;
+	call_result<> res_baz;
+	std::map<std::string, yash::signal<void(void)>> sig;
+	sig["foo"].connect(std::bind(&f0, std::ref(res_foo)));
+	sig["bar"].connect(std::bind(&f0, std::ref(res_bar)));
+	sig["baz"].connect(std::bind(&f0, std::ref(res_baz)));
+
+	sig["foo"]();
+	TEST_ASSERT(res_foo.called);
+	sig["bar"]();
+	TEST_ASSERT(res_bar.called);
+	sig["baz"]();
+	TEST_ASSERT(res_baz.called);
+
+	TEST_ASSERT(sig.erase("foo") == 1);
+	res_foo.called = false;
+	sig["foo"]();
+	TEST_ASSERT(!res_foo.called);
+}
+
+void test_movable_auto_connection()
+{
+	yash::signal<void(void)> sig1;
+	yash::signal<void(void)> sig2;
+	yash::signal<void(void)> sig3;
+
+	call_result<> res1;
+	call_result<> res2;
+	call_result<> res3;
+
+	{
+		std::vector<yash::auto_connection> conn;
+		conn.push_back(sig1.connect(std::bind(&f0, std::ref(res1))));
+		conn.push_back(sig2.connect(std::bind(&f0, std::ref(res2))));
+		conn.push_back(sig3.connect(std::bind(&f0, std::ref(res3))));
+		sig1();
+		sig2();
+		sig3();
+		TEST_ASSERT(res1.called);
+		TEST_ASSERT(res2.called);
+		TEST_ASSERT(res3.called);
+	}
+
+	res1.called = res2.called = res3.called = false;
+
+	sig1();
+	sig2();
+	sig3();
+	TEST_ASSERT(!res1.called);
+	TEST_ASSERT(!res2.called);
+	TEST_ASSERT(!res3.called);
+}
+
+void test_lambda()
+{
+	yash::signal<void(void)> sig;
+
+	bool cap(false);
+	sig.connect([&cap](){ cap = true; });
+
+	TEST_ASSERT(!cap);
+	sig();
+	TEST_ASSERT(cap);
+}
+
 int main()
 {
 	RUN_TEST(test_arg0);
@@ -912,5 +981,8 @@ int main()
 	RUN_TEST(test_signal_deconstruct);
 	RUN_TEST(test_connection_assign);
 	RUN_TEST(test_loose_coupling);
+	RUN_TEST(test_movable_signal);
+	RUN_TEST(test_movable_auto_connection);
+	RUN_TEST(test_lambda);
 	return 0;
 }
