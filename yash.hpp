@@ -105,6 +105,15 @@ public:
 	auto_connection(connection const& conn)
 	: conn_(conn) { }
 
+	auto_connection(auto_connection && o)
+	: conn_(std::move(o.conn_)) { }
+
+	auto_connection & operator=(auto_connection && o)
+	{
+		conn_ = std::move(o.conn_);
+		return *this;
+	}
+
 	void disconnect()
 	{ conn_.disconnect(); }
 
