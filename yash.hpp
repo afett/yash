@@ -57,6 +57,7 @@ public:
 	// The connections share the actual callback closure if disconnect
 	// is called on one of them, all are disconnected.
 	connection(connection const& o) : cb_(o.cb_) { }
+	connection(connection && o) : cb_(std::move(o.cb_)) { }
 
 	// Assignment to a connected connection will not disconnect it but
 	// leave the callback connected to the signal. There is just no
@@ -67,6 +68,12 @@ public:
 			cb_ = o.cb_;
 		}
 
+		return *this;
+	}
+
+	connection & operator=(connection && o)
+	{
+		cb_ = std::move(o.cb_);
 		return *this;
 	}
 
