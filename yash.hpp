@@ -150,6 +150,13 @@ public:
 	signal() : cb_() { }
 	~signal() {}
 
+	signal(signal && o) : cb_(std::move(o.cb_)) { }
+	signal & operator=(signal && o)
+	{
+		cb_ = std::move(o.cb_);
+		return *this;
+	}
+
 	size_t slots() const
 	{ return cb_.size(); }
 
