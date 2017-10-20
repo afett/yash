@@ -93,8 +93,8 @@ public:
 	}
 
 private:
-	typedef std::weak_ptr<detail::callback_base> callback_weak_ptr;
-	typedef std::shared_ptr<detail::callback_base> callback_ptr;
+	using callback_weak_ptr = std::weak_ptr<detail::callback_base>;
+	using callback_ptr = std::shared_ptr<detail::callback_base>;
 
 	template <typename T> friend class signal;
 	connection(callback_ptr const& cb) : cb_(cb) { }
@@ -138,7 +138,7 @@ private:
 template <typename T>
 class signal_proxy {
 public:
-	typedef std::function<T> slot_type;
+	using slot_type = std::function<T>;
 
 	virtual connection connect(slot_type const&) = 0;
 	virtual ~signal_proxy() = default;
@@ -147,8 +147,8 @@ public:
 template <typename T>
 class signal : public signal_proxy<T> {
 public:
-	typedef signal_proxy<T> proxy_type;
-	typedef typename signal_proxy<T>::slot_type slot_type;
+	using proxy_type = signal_proxy<T>;
+	using slot_type = typename signal_proxy<T>::slot_type;
 
 	signal() = default;
 	signal(signal && o) : cb_(std::move(o.cb_)) { }
@@ -213,8 +213,8 @@ private:
 		slot_type fn;
 	};
 
-	typedef std::shared_ptr<callback> callback_ptr;
-	typedef std::weak_ptr<callback> callback_weak_ptr;
+	using callback_ptr = std::shared_ptr<callback>;
+	using callback_weak_ptr = std::weak_ptr<callback>;
 
 	callback_ptr add_callback(slot_type const& slot)
 	{
