@@ -168,7 +168,7 @@ public:
 
 	// The callback will not be called for any already active invokation
 	// of this signal at the time connect() is called.
-	connection connect(slot_type const& slot)
+	connection connect(slot_type const& slot) final
 	{ return connection(add_callback(slot)); }
 
 	template <typename... Args>
@@ -200,7 +200,7 @@ private:
 			assert(fn && "no callback function");
 		}
 
-		void disconnect()
+		void disconnect() final
 		{
 			if (owner) {
 				owner->del_callback(this);
