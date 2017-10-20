@@ -235,7 +235,7 @@ private:
 	}
 
 	template <typename... Args>
-	static void call_each(std::vector<callback_weak_ptr> const& cbs, Args&&... args)
+	static void call_each(std::vector<callback_weak_ptr> cbs, Args&&... args)
 	{
 		for (auto ptr: cbs) {
 			auto cb(ptr.lock());
