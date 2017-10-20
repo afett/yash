@@ -43,7 +43,7 @@ namespace detail {
 class callback_base {
 public:
 	virtual void disconnect() = 0;
-	virtual ~callback_base() {}
+	virtual ~callback_base() = default;
 };
 
 }
@@ -51,7 +51,7 @@ public:
 // handle for single slot connected to a signal
 class connection {
 public:
-	connection() : cb_() { }
+	connection() = default;
 	~connection() { cb_.reset(); }
 
 	// The connections share the actual callback closure if disconnect
@@ -105,6 +105,10 @@ private:
 // RAII wrapper for connection
 class auto_connection {
 public:
+	auto_connection() = delete;
+	auto_connection(auto_connection const&) = delete;
+	auto_connection & operator=(auto_connection const&) = delete;
+
 	auto_connection(connection const& conn)
 	: conn_(conn) { }
 
@@ -127,10 +131,6 @@ public:
 	{ conn_.disconnect(); }
 
 private:
-	auto_connection() = delete;
-	auto_connection(auto_connection const&) = delete;
-	auto_connection & operator=(auto_connection const&) = delete;
-
 	connection conn_;
 };
 
@@ -141,7 +141,7 @@ public:
 	typedef std::function<T> slot_type;
 
 	virtual connection connect(slot_type const&) = 0;
-	virtual ~signal_proxy() {}
+	virtual ~signal_proxy() = default;
 };
 
 template <typename T>
@@ -150,15 +150,18 @@ public:
 	typedef signal_proxy<T> proxy_type;
 	typedef typename signal_proxy<T>::slot_type slot_type;
 
-	signal() : cb_() { }
-	~signal() {}
-
+	signal() = default;
 	signal(signal && o) : cb_(std::move(o.cb_)) { }
 	signal & operator=(signal && o)
 	{
 		cb_ = std::move(o.cb_);
 		return *this;
 	}
+
+	// Rationale
+	// The semantics of copying and assigning a signal are somewhat undefined.
+	signal(signal const&) = delete;
+	signal & operator=(signal const&) = delete;
 
 	size_t slots() const
 	{ return cb_.size(); }
@@ -189,14 +192,6 @@ public:
 	}
 
 private:
-	// Rationale
-	// While it may seem convenient to store signals in STL containers
-	// the semantics of copying and assigning a signal are somewhat
-	// undefined.  For c++03 we have no move semantics, so just disallow
-	// those operations.
-	signal(signal const&) = delete;
-	signal & operator=(signal const&) = delete;
-
 	struct callback : public detail::callback_base {
 		callback(signal<T> *owner_, slot_type const& fn_)
 		: owner(owner_), fn(fn_)
