@@ -953,6 +953,34 @@ void test_lambda()
 	TEST_ASSERT(cap);
 }
 
+class my_callback : public yash::callback_base {
+public:
+	my_callback() : disconnect_called(false) { }
+
+	void disconnect() override
+	{
+		disconnect_called = true;
+	}
+
+	bool disconnect_called;
+};
+
+void test_custom_callback()
+{
+	auto cb = std::make_shared<my_callback>();
+	auto conn = yash::connection(cb);
+	TEST_ASSERT(conn.connected());
+	TEST_ASSERT(!cb->disconnect_called);
+	conn.disconnect();
+	TEST_ASSERT(cb->disconnect_called);
+	TEST_ASSERT(!conn.connected());
+
+	conn = yash::connection(cb);
+	TEST_ASSERT(conn.connected());
+	cb.reset();
+	TEST_ASSERT(!conn.connected());
+}
+
 int main()
 {
 	RUN_TEST(test_arg0);
@@ -984,5 +1012,6 @@ int main()
 	RUN_TEST(test_movable_signal);
 	RUN_TEST(test_movable_auto_connection);
 	RUN_TEST(test_lambda);
+	RUN_TEST(test_custom_callback);
 	return 0;
 }

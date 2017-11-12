@@ -37,22 +37,21 @@
 
 namespace yash {
 
-namespace detail {
-
-// private signal <-> connection interface
 class callback_base {
 public:
+	using weak_ptr = std::weak_ptr<callback_base>;
+
 	virtual void disconnect() = 0;
 	virtual ~callback_base() = default;
 };
-
-}
 
 // handle for single slot connected to a signal
 class connection {
 public:
 	connection() = default;
 	~connection() { cb_.reset(); }
+
+	connection(callback_base::weak_ptr const& cb) : cb_(cb) { }
 
 	// The connections share the actual callback closure if disconnect
 	// is called on one of them, all are disconnected.
@@ -93,13 +92,7 @@ public:
 	}
 
 private:
-	using callback_weak_ptr = std::weak_ptr<detail::callback_base>;
-	using callback_ptr = std::shared_ptr<detail::callback_base>;
-
-	template <typename T> friend class signal;
-	connection(callback_ptr const& cb) : cb_(cb) { }
-
-	callback_weak_ptr cb_;
+	callback_base::weak_ptr cb_;
 };
 
 // RAII wrapper for connection
@@ -192,7 +185,7 @@ public:
 	}
 
 private:
-	struct callback : public detail::callback_base {
+	struct callback : public callback_base {
 		callback(signal<T> *owner_, slot_type const& fn_)
 		: owner(owner_), fn(fn_)
 		{
