@@ -4,8 +4,7 @@ compiler:
   - clang
   - gcc
 
-dist: trusty
-sudo: false
+dist: xenial
 
 branches:
   only:
